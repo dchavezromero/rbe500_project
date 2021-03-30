@@ -1,26 +1,36 @@
 <?xml version="1.0"?>
-<robot name="origins">
+<robot name="scara">
+
+  <!-- Constants for robot dimensions -->
+  <property name="PI" value="3.1415926535897931"/>
+  <property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
+  <property name="height1" value="1" /> <!-- Link 1 -->
+  <property name="height2" value="1" /> <!-- Link 2 -->
+  <property name="height3" value="1" /> <!-- Link 3 -->
+
   <link name="base_link">
     <visual>
       <geometry>
-        <cylinder length="0.6" radius="0.2"/>
+        <cylinder length="0" radius="0"/>
       </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
   </link>
 
-  <link name="right_leg">
+  <link name="link1">
     <visual>
       <geometry>
-        <box size="0.6 0.1 0.2"/>
+        <cylinder length="${height1}" radius="${width}"/>
       </geometry>
-      <origin rpy="0 1.57075 0" xyz="0 0 -0.3"/>
+      <origin rpy="0 0 ${-PI}" xyz="0 0 ${height1/2}"/>
     </visual>
   </link>
 
-  <joint name="base_to_right_leg" type="continuous">
+  <joint name="base_to_link1" type="continuous">
     <parent link="base_link"/>
-    <child link="right_leg"/>
-    <origin xyz="0 -0.22 0.25"/>
+    <child link="link1"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="0 0 0"/>
   </joint>
 
 </robot>
