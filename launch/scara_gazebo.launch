@@ -21,11 +21,15 @@
   <param name="robot_description"
     command="$(find xacro)/xacro --inorder '$(find rbe500_project)/urdf/scara.xacro'" />
 
+  <!--node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+  <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /-->
+
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model scara -param robot_description"/>
 
   <!-- ros_control rrbot launch file -->
-  <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
+  <include file="$(find rbe500_project)/launch/scara_control.launch" />
+
 
 </launch>

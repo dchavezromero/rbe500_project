@@ -7,6 +7,7 @@
   <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height" value="1" /> <!-- Link height -->
   <xacro:property name="prismatic_limit" value="1" /> <!-- Limit for prismatic joint -->
+  <xacro:property name="damping_coeff" value="0.7" /> <!-- Damping coefficient for joints -->
 
   <!-- Import all Gazebo-customization elements, including Gazebo colors -->
   <xacro:include filename="$(find rbe500_project)/urdf/scara.gazebo" />
@@ -48,6 +49,7 @@
     <limit effort="1000.0" lower="${-PI}" upper="${PI}" velocity="0.5"/>
     <axis xyz="0 0 1"/>
     <origin xyz="0 0 0"/>
+    <dynamics damping="${damping_coeff}"/>
   </joint>
 
   <link name="link2">
@@ -115,6 +117,7 @@
     <limit effort="1000.0" lower="${-PI}" upper="${PI}" velocity="0.5"/>
     <axis xyz="0 0 1"/>
     <origin xyz="${height} 0 0"/>
+    <dynamics damping="${damping_coeff}"/>
   </joint>
 
   <link name="gripper_pole">
@@ -148,7 +151,41 @@
     <limit effort="1000.0" lower="0" upper="${prismatic_limit}" velocity="0.5"/>
     <axis xyz="0 0 1"/>
     <origin rpy="${PI} 0 0" xyz="${height} 0 0"/>
+    <dynamics damping="${damping_coeff}"/>
   </joint>
+
+  <transmission name="tran1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="theta1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="theta2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="d3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
 
 </robot>
