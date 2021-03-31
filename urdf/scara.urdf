@@ -7,6 +7,7 @@
   <property name="height1" value="1" /> <!-- Link 1 -->
   <property name="height2" value="1" /> <!-- Link 2 -->
   <property name="height3" value="1" /> <!-- Link 3 -->
+  <property name="prismatic_limit" value="1" /> <!-- Limit for prismatic joint -->
 
   <link name="base">
     <visual>
@@ -25,9 +26,10 @@
     </visual>
   </link>
 
-  <joint name="base_to_link1" type="continuous">
+  <joint name="base_to_link1" type="revolute">
     <parent link="base"/>
     <child link="link1"/>
+    <limit effort="1000.0" lower="${-PI}" upper="${PI}" velocity="0.5"/>
     <axis xyz="0 0 1"/>
     <origin xyz="0 0 0"/>
   </joint>
@@ -52,15 +54,33 @@
       <geometry>
         <cylinder length="${height3}" radius="${width}"/>
       </geometry>
-      <origin rpy="0 ${PI/2} 0" xyz="${height1/2} 0 0"/>
+      <origin rpy="0 ${PI/2} 0" xyz="${height2/2} 0 0"/>
     </visual>
   </link>
 
-  <joint name="link2_to_link3" type="continuous">
+  <joint name="link2_to_link3" type="revolute">
     <parent link="link2"/>
     <child link="link3"/>
+    <limit effort="1000.0" lower="${-PI}" upper="${PI}" velocity="0.5"/>
     <axis xyz="0 0 1"/>
-    <origin xyz="${height1} 0 0"/>
+    <origin xyz="${height2} 0 0"/>
+  </joint>
+
+  <link name="gripper_pole">
+    <visual>
+      <geometry>
+        <cylinder length="0.2" radius="0.01"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+    </visual>
+  </link>
+
+  <joint name="gripper_extension" type="prismatic">
+    <parent link="link3"/>
+    <child link="gripper_pole"/>
+    <limit effort="1000.0" lower="0" upper="${prismatic_limit}" velocity="0.5"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="${PI} 0 0" xyz="${height3} 0 0"/>
   </joint>
 
 
