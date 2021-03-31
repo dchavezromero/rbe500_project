@@ -1,7 +1,7 @@
 Background\ ColorR=0.0941176
 Background\ ColorG=0
 Background\ ColorB=0.466667
-Fixed\ Frame=/base
+Fixed\ Frame=/world
 Target\ Frame=<Fixed Frame>
 Grid.Alpha=0.5
 Grid.Cell\ Size=0.5

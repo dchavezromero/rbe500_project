@@ -12,20 +12,10 @@
   <xacro:include filename="$(find rbe500_project)/urdf/scara.gazebo" />
 
   <!-- Used for fixing robot to Gazebo 'base' -->
+
+
   <link name="world"/>
 
-  <link name="base">
-    <visual>
-      <geometry>
-        <cylinder length="0" radius="0"/>
-      </geometry>
-    </visual>
-  </link>
-
-  <joint name="fixed" type="fixed">
-    <parent link="world"/>
-    <child link="base"/>
-  </joint>
 
   <link name="link1">
     <collision>
@@ -53,7 +43,7 @@
   </link>
 
   <joint name="theta1" type="revolute">
-    <parent link="base"/>
+    <parent link="world"/>
     <child link="link1"/>
     <limit effort="1000.0" lower="${-PI}" upper="${PI}" velocity="0.5"/>
     <axis xyz="0 0 1"/>
