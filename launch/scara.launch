@@ -1,6 +1,6 @@
 <launch>
 
-  <arg name="model" default="$(find rbe500_project)/urdf/scara.urdf"/>
+  <arg name="model" default="$(find rbe500_project)/urdf/scara.xacro"/>
   <arg name="gui" default="true" />
   <arg name="rvizconfig" default="$(find rbe500_project)/rviz/urdf.rviz" />
 
