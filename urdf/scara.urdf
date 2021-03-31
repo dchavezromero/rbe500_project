@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<robot name="scara">
+<robot name="scara" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Constants for robot dimensions -->
-  <property name="PI" value="3.1415926535897931"/>
-  <property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
-  <property name="height1" value="1" /> <!-- Link 1 -->
-  <property name="height2" value="1" /> <!-- Link 2 -->
-  <property name="height3" value="1" /> <!-- Link 3 -->
-  <property name="prismatic_limit" value="1" /> <!-- Limit for prismatic joint -->
+  <xacro:property name="PI" value="3.1415926535897931"/>
+  <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
+  <xacro:property name="height1" value="1" /> <!-- Link 1 -->
+  <xacro:property name="height2" value="1" /> <!-- Link 2 -->
+  <xacro:property name="height3" value="1" /> <!-- Link 3 -->
+  <xacro:property name="prismatic_limit" value="1" /> <!-- Limit for prismatic joint -->
 
   <link name="base">
     <visual>
