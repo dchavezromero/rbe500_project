@@ -6,6 +6,8 @@
   <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
   <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height" value="1" /> <!-- Link height -->
+  <xacro:property name="width_pole" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
+  <xacro:property name="height_pole" value="0.1" /> <!-- Link height -->
   <xacro:property name="prismatic_limit" value="1" /> <!-- Limit for prismatic joint -->
   <xacro:property name="damping_coeff" value="0.7" /> <!-- Damping coefficient for joints -->
 
@@ -21,14 +23,14 @@
   <link name="link1">
     <collision>
       <geometry>
-        <cylinder length="${height}" radius="${width}"/>
+        <box size="${width} ${width} ${height}"/>
       </geometry>
       <origin rpy="0 0 ${-PI}" xyz="0 0 ${height/2}"/>
     </collision>
 
     <visual>
       <geometry>
-        <cylinder length="${height}" radius="${width}"/>
+        <box size="${width} ${width} ${height}"/>
       </geometry>
       <origin rpy="0 0 ${-PI}" xyz="0 0 ${height/2}"/>
     </visual>
@@ -55,14 +57,14 @@
   <link name="link2">
     <collision>
       <geometry>
-        <cylinder length="${height}" radius="${width}"/>
+        <box size="${width} ${width} ${height}"/>
       </geometry>
       <origin rpy="0 ${PI/2} 0" xyz="${height/2} 0 0"/>
     </collision>
 
     <visual>
       <geometry>
-        <cylinder length="${height}" radius="${width}"/>
+        <box size="${width} ${width} ${height}"/>
       </geometry>
       <material name="my_color">
         <color rgb="255 135 255" alpha="1.0"/>
@@ -89,14 +91,14 @@
   <link name="link3">
     <collision>
       <geometry>
-        <cylinder length="${height}" radius="${width}"/>
+        <box size="${width} ${width} ${height}"/>
       </geometry>
       <origin rpy="0 ${PI/2} 0" xyz="${height/2} 0 0"/>
     </collision>
   
     <visual>
       <geometry>
-        <cylinder length="${height}" radius="${width}"/>
+        <box size="${width} ${width} ${height}"/>
       </geometry>
       <origin rpy="0 ${PI/2} 0" xyz="${height/2} 0 0"/>
     </visual>
@@ -123,14 +125,14 @@
   <link name="gripper_pole">
     <collision>
       <geometry>
-        <cylinder length="0.2" radius="0.01"/>
+        <box size="${width_pole} ${width_pole} ${height_pole}"/>
       </geometry>
       <origin rpy="0 0 0 " xyz="0 0 0"/>
     </collision>
 
     <visual>
       <geometry>
-        <cylinder length="0.2" radius="0.01"/>
+        <box size="${width_pole} ${width_pole} ${height_pole}"/>
       </geometry>
       <origin rpy="0 0 0 " xyz="0 0 0"/>
     </visual>
@@ -139,9 +141,9 @@
       <origin rpy="0 0 0 " xyz="0 0 0"/>
       <mass value="${mass}"/>
       <inertia
-	  ixx="${mass / 12.0 * (width*width + height*height)}" ixy="0.0" ixz="0.0"
-	  iyy="${mass / 12.0 * (height*height + width*width)}" iyz="0.0"
-	  izz="${mass / 12.0 * (width*width + width*width)}"/>
+	  ixx="${mass / 12.0 * (width_pole*width_pole + height_pole*height_pole)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass / 12.0 * (height_pole*height_pole + width_pole*width_pole)}" iyz="0.0"
+	  izz="${mass / 12.0 * (width_pole*width_pole + width_pole*width_pole)}"/>
     </inertial>
   </link>
 

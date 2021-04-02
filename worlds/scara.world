@@ -12,5 +12,10 @@
       <uri>model://sun</uri>
     </include>
 
+    <include>
+
+      <plugin name="gravity_compensation" filename="libGravityCompensationPlugin.so"/>
+    </include>
+
   </world>
 </sdf>
