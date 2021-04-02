@@ -9,6 +9,12 @@
     </plugin>
   </gazebo>
 
+  <!--gazebo>
+    <plugin name="gravity_compensation" filename="libGravityCompensationPlugin.so">
+      <uri>model://scara</uri>
+    </plugin>
+  </gazebo-->
+
   <!-- Base link -->
   <gazebo reference="world">
     <material>Gazebo/Orange</material>

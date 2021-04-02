@@ -6,6 +6,7 @@ from sensor_msgs.msg import JointState
 from geometry_msgs.msg import Pose
 
 result = Pose()
+pub = rospy.Publisher("/scara/ee_pose", Pose, queue_size=1)
 
 
 def euler_to_quaternion(roll, pitch, yaw):
@@ -30,23 +31,19 @@ def multiply(X, Y):
     return matrix
 
 def calculate_forward_kin(joints):
-    T12 = caclDH(0, joints[0])
-    T13 = multiply(T12, caclDH(1, joints[1]))
-    T14 = multiply(T13, caclDH(2, joints[2]))
-    T15 = multiply(T14, caclDH(3, joints[3]))
-    T16 = multiply(T15, caclDH(4, joints[4]))
-    T17 = multiply(T16, caclDH(5, joints[5]))
+    T01 = caclDH(0, joints[0])
+    T02 = multiply(T01, caclDH(1, joints[1]))
+    T03 = multiply(T02, caclDH(2, joints[2]))
 
-    return T17
+    return T03
 
 def caclDH(joint, angle):
+    
+    L = 1
 
-    dh_const = [[angle, 475, 150, math.pi/2],
-                [angle + math.pi/2, 0, 600, 0],
-                [angle, 0, 0, math.pi/2],
-                [angle, 720, 120, -math.pi/2],
-                [angle, 0, 0, math.pi/2],
-                [angle + math.pi, 85, 0, 0]]
+    dh_const = [[angle, L, L, 0],
+                [angle, 0, L, math.pi],
+                [0, angle, 0, 0]]
 
     transform = [[math.cos(dh_const[joint][0]),
                   -math.sin(dh_const[joint][0])*math.cos(dh_const[joint][3]),
@@ -66,13 +63,34 @@ def caclDH(joint, angle):
 
 def callback(msg):
     d3 = msg.position[0]
+    theta1 = msg.position[1]
+    theta2 = msg.position[2]
 
+    joint_angles = theta1, theta2, d3
 
-    rospy.loginfo(d3)
+    trans_matrix = calculate_forward_kin(joint_angles)
+    ee_pos = trans_matrix[0][3], trans_matrix[1][3], trans_matrix[2][3]
+    rot_matrix = trans_matrix[0][0], trans_matrix[0][1], trans_matrix[0][2], \
+                 trans_matrix[1][0], trans_matrix[1][1], trans_matrix[1][2], \
+                 trans_matrix[2][0], trans_matrix[2][1], trans_matrix[2][2]
+
+    quat = get_quaternions(rot_matrix)
+
+    result.position.x = ee_pos[0]
+    result.position.y = ee_pos[1]
+    result.position.z = ee_pos[2]
+    result.orientation.x = quat[0]
+    result.orientation.y = quat[1]
+    result.orientation.z = quat[2]
+    result.orientation.w = quat[3]
+
+    rospy.loginfo(result)
+
+    pub.publish(result)
 
 def main():
     rospy.init_node("forward_kinematics")
-    #pub = rospy.Publisher("fowardkin", Pose, queue_size=1)
+    
     sub = rospy.Subscriber("/scara/joint_states", JointState, callback)
     r = rospy.Rate(1)
 

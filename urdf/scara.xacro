@@ -6,6 +6,7 @@
   <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
   <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height" value="1" /> <!-- Link height -->
+  <xacro:property name="mass_pole" value="0.01" /> <!-- arbitrary value for mass -->
   <xacro:property name="width_pole" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height_pole" value="0.1" /> <!-- Link height -->
   <xacro:property name="prismatic_limit" value="1" /> <!-- Limit for prismatic joint -->
@@ -139,7 +140,7 @@
 
     <inertial>
       <origin rpy="0 0 0 " xyz="0 0 0"/>
-      <mass value="${mass}"/>
+      <mass value="${mass_pole}"/>
       <inertia
 	  ixx="${mass / 12.0 * (width_pole*width_pole + height_pole*height_pole)}" ixy="0.0" ixz="0.0"
 	  iyy="${mass / 12.0 * (height_pole*height_pole + width_pole*width_pole)}" iyz="0.0"
