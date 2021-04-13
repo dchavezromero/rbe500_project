@@ -25,9 +25,6 @@
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model scara -param robot_description"/>
 
-  <!-- ros_control scara launch file -->
-  <include file="$(find rbe500_project)/launch/scara_control.launch" />
-
   <!-- Start forward kinematics node -->
   <node name="forward_kinematics" pkg="rbe500_project" type="forward_kinematics.py" />
 

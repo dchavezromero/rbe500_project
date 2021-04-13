@@ -8,9 +8,9 @@ import rospy
 import math
 from std_msgs.msg import Float64
 
-pub_theta1 = rospy.Publisher("/scara/theta1_position_controller/command", Float64, queue_size=1)
-pub_theta2 = rospy.Publisher("/scara/theta2_position_controller/command", Float64, queue_size=1)
-pub_d3 = rospy.Publisher("/scara/d3_position_controller/command", Float64, queue_size=1)
+#pub_theta1 = rospy.Publisher("/scara/theta1_position_controller/command", Float64, queue_size=1)
+#pub_theta2 = rospy.Publisher("/scara/theta2_position_controller/command", Float64, queue_size=1)
+#pub_d3 = rospy.Publisher("/scara/d3_position_controller/command", Float64, queue_size=1)
 
 result = joint_angles()
 
@@ -41,9 +41,9 @@ def calc_inv_kin(req):
     result.d3 = d3
 
     # Move joints to calculated values
-    pub_theta1.publish(result.theta1)
-    pub_theta2.publish(result.theta2)
-    pub_d3.publish(result.d3)
+    #pub_theta1.publish(result.theta1)
+    #pub_theta2.publish(result.theta2)
+    #pub_d3.publish(result.d3)
 
     return InvKinResponse(result)
 
