@@ -2,12 +2,10 @@
 import rospy
 import math
 import numpy as np
-from sensor_msgs.msg import JointState
+from gazebo_msgs.srv import *
 from geometry_msgs.msg import Pose
 
 result = Pose()
-pub = rospy.Publisher("/scara/ee_pose", Pose, queue_size=1)
-
 
 def euler_to_quaternion(roll, pitch, yaw):
     qx = np.sin(roll / 2) * np.cos(pitch / 2) * np.cos(yaw / 2) - np.cos(roll / 2) * np.sin(pitch / 2) * np.sin(yaw / 2)
@@ -61,10 +59,20 @@ def caclDH(joint, angle):
     return transform
 
 
-def callback(msg):
-    d3 = msg.position[0]
-    theta1 = msg.position[1]
-    theta2 = msg.position[2]
+def get_position(joint):
+	rospy.wait_for_service('/gazebo/get_joint_properties')
+	try:
+		joint_call = rospy.ServiceProxy('/gazebo/get_joint_properties', GetJointProperties)
+		joint_data = joint_call(joint)
+		position = joint_data.position[0]
+		return position
+	except rospy.ServiceException as e:
+		print("Service call failed: %s"%e)
+
+def callback():
+    d3 = get_position('d3')
+    theta1 = get_position('theta1')
+    theta2 = get_position('theta2')
 
     joint_angles = theta1, theta2, d3
 
@@ -84,18 +92,17 @@ def callback(msg):
     result.orientation.z = quat[2]
     result.orientation.w = quat[3]
 
-    rospy.loginfo(result)
-
-    pub.publish(result)
 
 def main():
+    pub = rospy.Publisher("/scara/ee_pose", Pose, queue_size=1)
     rospy.init_node("forward_kinematics")
-    
-    sub = rospy.Subscriber("/scara/joint_states", JointState, callback)
-    r = rospy.Rate(1)
+    r = rospy.Rate(15)
 
     while not rospy.is_shutdown():
-        #pub.publish(result)
+
+        callback()
+        rospy.loginfo(result)
+        pub.publish(result)
         r.sleep()
 
 if __name__ == "__main__":
