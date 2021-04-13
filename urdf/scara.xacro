@@ -6,7 +6,7 @@
   <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
   <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height" value="1" /> <!-- Link height -->
-  <xacro:property name="mass_pole" value="0.01" /> <!-- arbitrary value for mass -->
+  <xacro:property name="mass_pole" value="0.1" /> <!-- arbitrary value for mass -->
   <xacro:property name="width_pole" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height_pole" value="0.1" /> <!-- Link height -->
   <xacro:property name="prismatic_limit" value="1" /> <!-- Limit for prismatic joint -->

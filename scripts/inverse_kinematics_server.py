@@ -6,6 +6,7 @@ from rbe500_project.srv import InvKin,InvKinResponse
 from rbe500_project.msg import joint_angles
 import rospy
 import math
+from gazebo_msgs.srv import *
 from std_msgs.msg import Float64
 
 #pub_theta1 = rospy.Publisher("/scara/theta1_position_controller/command", Float64, queue_size=1)
@@ -13,6 +14,20 @@ from std_msgs.msg import Float64
 #pub_d3 = rospy.Publisher("/scara/d3_position_controller/command", Float64, queue_size=1)
 
 result = joint_angles()
+
+def write_position():
+    rospy.wait_for_service('/gazebo/set_model_configuration')
+
+    try:
+        joint_call = rospy.ServiceProxy('/gazebo/set_model_configuration', SetModelConfiguration)
+        joint_req = SetModelConfigurationRequest()
+        joint_req.model_name = 'scara'
+        joint_req.urdf_param_name = ''
+        joint_req.joint_names = ['theta1', 'theta2', 'd3'] #list
+        joint_req.joint_positions = [result.theta1, result.theta2, result.d3] #list
+        res = joint_call(joint_req)
+    except rospy.ServiceException as e:
+        print("Service call failed: %s"%e)
 
 def calc_inv_kin(req):
 
@@ -41,6 +56,7 @@ def calc_inv_kin(req):
     result.d3 = d3
 
     # Move joints to calculated values
+    write_position()
     #pub_theta1.publish(result.theta1)
     #pub_theta2.publish(result.theta2)
     #pub_d3.publish(result.d3)
