@@ -1,15 +1,6 @@
 # rbe500_project
 Final project for RBE 500
 Sheeesh
-## Dependencies
-
-### ROS Effort Controllers
-```
-sudo apt-get update
-```
-```
-sudo apt-get install ros-melodic-effort_controllers
-```
 
 To launch the Gazebo simulation:
 ```
