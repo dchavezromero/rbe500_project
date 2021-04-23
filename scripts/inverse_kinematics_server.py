@@ -7,7 +7,6 @@ from rbe500_project.msg import joint_angles
 import rospy
 import math
 from gazebo_msgs.srv import *
-from std_msgs.msg import Float64
 
 #pub_theta1 = rospy.Publisher("/scara/theta1_position_controller/command", Float64, queue_size=1)
 #pub_theta2 = rospy.Publisher("/scara/theta2_position_controller/command", Float64, queue_size=1)

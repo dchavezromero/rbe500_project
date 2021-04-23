@@ -59,6 +59,7 @@ add_message_files(
 add_service_files(
    FILES
    InvKin.srv
+   MoveJoint.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -164,6 +165,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
    scripts/forward_kinematics.py
+   scripts/position_controller_server.py
    scripts/inverse_kinematics_server.py
    scripts/inverse_kinematics_client.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
