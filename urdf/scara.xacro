@@ -46,7 +46,7 @@
     </inertial>
   </link>
 
-  <joint name="theta1" type="revolute">
+  <joint name="theta1" type="fixed">
     <parent link="world"/>
     <child link="link1"/>
     <limit effort="1000.0" lower="${-PI}" upper="${PI}" velocity="0.5"/>
@@ -114,7 +114,7 @@
     </inertial>
   </link>
 
-  <joint name="theta2" type="revolute">
+  <joint name="theta2" type="fixed">
     <parent link="link2"/>
     <child link="link3"/>
     <limit effort="1000.0" lower="${-PI}" upper="${PI}" velocity="0.5"/>

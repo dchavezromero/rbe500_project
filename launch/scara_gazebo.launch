@@ -26,7 +26,7 @@
     args="-urdf -model scara -param robot_description"/>
 
   <!-- Start forward kinematics node -->
-  <node name="forward_kinematics" pkg="rbe500_project" type="forward_kinematics.py" />
+  <!-- node name="forward_kinematics" pkg="rbe500_project" type="forward_kinematics.py" / -->
 
   <!-- Start inverse kinematics server node -->
   <node name="inverse_kinematics_server" pkg="rbe500_project" type="inverse_kinematics_server.py" />
