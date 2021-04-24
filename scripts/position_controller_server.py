@@ -3,8 +3,6 @@
 from __future__ import print_function
 
 import rospy
-import math
-import numpy as np
 from rbe500_project.srv import MoveJoint,MoveJointResponse
 from std_msgs.msg import Float64
 
@@ -13,7 +11,7 @@ pub_setPoint = rospy.Publisher("/scara/set_point", Float64, queue_size=1)
 def callback(req):
     response = False
 
-    if (req.set_point <= 1 and req.set_point >= 0):
+    if (req.set_point <= 1 and req.set_point >= -1):
         response = True
         pub_setPoint.publish(req.set_point)
 

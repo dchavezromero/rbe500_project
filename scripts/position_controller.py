@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 import rospy
-import math
-import numpy as np
 import csv
 import os
 import time
 from gazebo_msgs.srv import *
 from std_msgs.msg import Float64
 
-Kp = 180
-Kd = 15
+Kp = 40
+Kd = 20
+joint_name = 'd3'
 ros_rate = 10.0
 sampling_rate_ms = (1/ros_rate) * 1000.0
 last_position = 0.0
@@ -91,7 +90,7 @@ def do_pd_control(set_point, curr_point):
 
 
 def callback(msg):
-    d3 = get_position('d3')
+    d3 = get_position(joint_name)
     do_pd_control(msg.data, d3)
 
 def main():
@@ -102,7 +101,7 @@ def main():
 
     while not rospy.is_shutdown():
         r.sleep()
-        do_pd_control(last_set_point, get_position('d3'))
+        do_pd_control(last_set_point, get_position(joint_name))
         
 
 if __name__ == "__main__":

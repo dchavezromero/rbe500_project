@@ -6,7 +6,7 @@
   <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
   <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height" value="1" /> <!-- Link height -->
-  <xacro:property name="mass_pole" value="0.01" /> <!-- arbitrary value for mass -->
+  <xacro:property name="mass_pole" value="0.1" /> <!-- arbitrary value for mass -->
   <xacro:property name="width_pole" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height_pole" value="0.1" /> <!-- Link height -->
   <xacro:property name="prismatic_limit" value="1" /> <!-- Limit for prismatic joint -->
@@ -151,11 +151,14 @@
   <joint name="d3" type="prismatic">
     <parent link="link3"/>
     <child link="gripper_pole"/>
-    <limit effort="1000.0" lower="0" upper="${prismatic_limit}" velocity="0.5"/>
+    <limit effort="1000.0" lower="${-prismatic_limit}" upper="${prismatic_limit}" velocity="0.5"/>
     <axis xyz="0 0 1"/>
     <origin rpy="${PI} 0 0" xyz="${height} 0 0"/>
     <dynamics damping="${damping_coeff}"/>
   </joint>
 
+  <gazebo reference="gripper_pole">
+    <turnGravityOff>true</turnGravityOff>
+  </gazebo>
 
 </robot>
