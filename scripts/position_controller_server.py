@@ -5,37 +5,17 @@ from __future__ import print_function
 import rospy
 import math
 import numpy as np
-from gazebo_msgs.srv import *
 from rbe500_project.srv import MoveJoint,MoveJointResponse
+from std_msgs.msg import Float64
 
-def write_effort(joint, effort, duration):
-    rospy.wait_for_service('/gazebo/apply_joint_effort')
-
-    try:
-        joint_call = rospy.ServiceProxy('/gazebo/apply_joint_effort', ApplyJointEffort)
-        joint_req = ApplyJointEffortRequest()
-        joint_req.joint_name = joint
-        joint_req.effort = effort
-        joint_req.duration = duration
-        res = joint_call(joint_req)
-    except rospy.ServiceException as e:
-        print("Service call failed: %s"%e)
-
-def get_position(joint):
-	rospy.wait_for_service('/gazebo/get_joint_properties')
-	try:
-		joint_call = rospy.ServiceProxy('/gazebo/get_joint_properties', GetJointProperties)
-		joint_data = joint_call(joint)
-		position = joint_data.position[0]
-		return position
-	except rospy.ServiceException as e:
-		print("Service call failed: %s"%e)
+pub_setPoint = rospy.Publisher("/scara/set_point", Float64, queue_size=1)
 
 def callback(req):
-    d3 = get_position('d3')
-    set_point = req.set_point
+    response = False
 
-    response = True
+    if (req.set_point <= 1 and req.set_point >= 0):
+        response = True
+        pub_setPoint.publish(req.set_point)
 
     return MoveJointResponse(response)
 
