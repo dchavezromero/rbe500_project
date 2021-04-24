@@ -32,8 +32,8 @@
   <node name="inverse_kinematics_server" pkg="rbe500_project" type="inverse_kinematics_server.py" />
 
     <!-- Start position controller nodes -->
-  <node name="position_controller_server" pkg="rbe500_project" type="position_controller_server.py" />
   <node name="position_controller" pkg="rbe500_project" type="position_controller.py" />
+  <node name="position_controller_server" pkg="rbe500_project" type="position_controller_server.py" />
 
 
 </launch>
