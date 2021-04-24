@@ -9,10 +9,16 @@ from std_msgs.msg import Float64
 Kp = 40
 Kd = 20
 joint_name = 'd3'
+
+# 10Hz frequency
 ros_rate = 10.0
-sampling_rate_ms = (1/ros_rate) * 1000.0
+
+# Loop execution rate in seconds (1/freq)
+sampling_rate = (1/ros_rate) 
 last_position = 0.0
 last_set_point = 0.0
+
+# Record data every 15 seconds
 record_time_interval = 15
 
 start_time = 0
@@ -47,7 +53,7 @@ def write_effort(effort, duration_sec):
         joint_req = ApplyJointEffortRequest()
         joint_req.joint_name = 'd3'
         joint_req.effort = effort
-        joint_req.duration.nsecs = duration_sec * 100000000
+        joint_req.duration.nsecs = duration_sec * 100000000 #Convert sampling rate to nanoseconds
         res = joint_call(joint_req)
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
@@ -65,24 +71,31 @@ def get_position(joint):
 def do_pd_control(set_point, curr_point):
     global last_position, last_set_point, timer_started, times, set_points, curr_points, start_time
 
+    # Start timer for recording data
     if not timer_started:
         start_time = time.time()
         timer_started = True
 
+    # Calculate errors
     position_err = set_point - curr_point
-    derivative_err = (last_position - curr_point)/(sampling_rate_ms/1000)
+    derivative_err = (last_position - curr_point)/sampling_rate
 
+    # Set reference vals
     last_position = curr_point
     last_set_point = set_point
 
+    # PD output
     effort = position_err*Kp + derivative_err*Kd
 
+    # Append data entries to lists
     times.append(time.time())
     set_points.append(set_point)
     curr_points.append(curr_point)
 
-    write_effort(effort, sampling_rate_ms/1000.0)
+    # Write effort to d3 joint
+    write_effort(effort, sampling_rate)
 
+    # If 15 secs have passed, record the data to a CSV file and reset timer params
     if time.time() > (start_time + record_time_interval):
         rospy.loginfo("Recorded data")
         record_data(times, set_points, curr_points)
