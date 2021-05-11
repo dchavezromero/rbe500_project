@@ -96,7 +96,7 @@ def callback():
 def main():
     pub = rospy.Publisher("/scara/ee_pose", Pose, queue_size=1)
     rospy.init_node("forward_kinematics")
-    r = rospy.Rate(15)
+    r = rospy.Rate(10)
 
     while not rospy.is_shutdown():
 

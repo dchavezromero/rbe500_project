@@ -1,0 +1,3 @@
+float64 theta1_velocity
+float64 theta2_velocity
+float64 d3_velocity

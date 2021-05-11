@@ -3,17 +3,32 @@
 from __future__ import print_function
 
 import rospy
+import math
 from rbe500_project.srv import MoveJoint,MoveJointResponse
-from std_msgs.msg import Float64
+from rbe500_project.msg import joint_angles
 
-pub_setPoint = rospy.Publisher("/scara/set_point", Float64, queue_size=1)
+pub_setPoint = rospy.Publisher("/scara/set_points", joint_angles, queue_size=1)
+set_points = joint_angles()
 
 def callback(req):
     response = False
 
-    if (req.set_point <= 1 and req.set_point >= -1):
+    theta1 = req.joint_set_points.theta1
+    theta2 = req.joint_set_points.theta2
+    d3 = req.joint_set_points.d3
+
+    # Maybe change to joint limits to be referenced from xacro file
+    if ((theta1 <= math.pi and theta1 >= -math.pi) 
+    and (theta2 <= math.pi and theta2 >= -math.pi) 
+    and (d3 <= 1 and d3 >= -1)):
+
         response = True
-        pub_setPoint.publish(req.set_point)
+
+        set_points.theta1 = theta1
+        set_points.theta2 = theta2
+        set_points.d3 = d3
+
+        pub_setPoint.publish(set_points)
 
     return MoveJointResponse(response)
 

@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 
-from rbe500_project.srv import InvKin,InvKinResponse
+from rbe500_project.srv import InvKin,InvKinResponse, MoveJoint, MoveJointRequest
 from rbe500_project.msg import joint_angles
 import rospy
 import math
@@ -15,16 +15,15 @@ from gazebo_msgs.srv import *
 result = joint_angles()
 
 def write_position():
-    rospy.wait_for_service('/gazebo/set_model_configuration')
+    rospy.wait_for_service('/position_controller')
 
     try:
-        joint_call = rospy.ServiceProxy('/gazebo/set_model_configuration', SetModelConfiguration)
-        joint_req = SetModelConfigurationRequest()
-        joint_req.model_name = 'scara'
-        joint_req.urdf_param_name = ''
-        joint_req.joint_names = ['theta1', 'theta2', 'd3'] #list
-        joint_req.joint_positions = [result.theta1, result.theta2, result.d3] #list
+        joint_call = rospy.ServiceProxy('/position_controller', MoveJoint)
+        joint_req = MoveJointRequest()
+        joint_req.joint_set_points = result
         res = joint_call(joint_req)
+        rospy.loginfo("Attempting to drive joints to calculated joint values.")
+
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
 
@@ -34,7 +33,7 @@ def calc_inv_kin(req):
     y = req.y
     z = req.z
 
-    L = 1
+    L = 1 #Length of links
 
     D2 = -(2*L**2 -(x**2 + y**2))/(2*(L**2))
     C2 = math.sqrt(1-(D2**2))
