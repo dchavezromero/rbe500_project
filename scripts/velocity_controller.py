@@ -25,26 +25,46 @@ record_time_interval = 15
 
 start_time = 0
 timer_started = False
+
 times = []
-ref_vels = []
-curr_vels = []
+ref_vels_theta1 = []
+ref_vels_theta2 = []
+ref_vels_d3 = []
+
+curr_vels_theta1 = []
+curr_vels_theta2 = []
+curr_vels_d3 = []
 
 def reset_timer():
-    global times, ref_vels, curr_vels, timer_started
+    global times, ref_vels_theta1, ref_vels_theta2, ref_vels_d3, curr_vels_theta1, curr_vels_theta2, curr_vels_d3, timer_started
 
     times = []
-    ref_vels = []
-    curr_vels = []
+    ref_vels_theta1 = []
+    ref_vels_theta2 = []
+    ref_vels_d3 = []
+
+    curr_vels_theta1 = []
+    curr_vels_theta2 = []
+    curr_vels_d3 = []
+
     timer_started = False
 
-def record_data(time, ref_vel, curr_vel):
+def record_data(times, ref_vels_theta1, ref_vels_theta2, ref_vels_d3, curr_vels_theta1, curr_vels_theta2, curr_vels_d3):
+
+    print(len(times))
+    print(len(ref_vels_theta1))
+    print(len(ref_vels_theta2))
+    print(len(ref_vels_d3))
+    print(len(curr_vels_theta1))
+    print(len(curr_vels_theta2))
+    print(len(curr_vels_d3))
 
     with open('velocity_controller_data.csv', 'wb') as csv_file:
 
         writer = csv.writer(csv_file, delimiter=',')
 
-        for i in range(len(time)):
-            writer.writerow((time[i], ref_vel[i], curr_vel[i]))
+        for i in range(len(times)-1):
+            writer.writerow((times[i], ref_vels_theta1[i], curr_vels_theta1[i], ref_vels_theta2[i], curr_vels_theta2[i], ref_vels_d3[i], curr_vels_d3[i]))
 
 
 def write_effort(effort, duration_sec, joint_name):
@@ -71,7 +91,10 @@ def get_position(joint):
 		print("Service call failed: %s"%e)
 
 def do_pd_control(ref_vel, curr_vel, joint_name):
-    global last_velocities, last_ref_velocities, timer_started, times, ref_vels, curr_vels, start_time
+    global last_velocities, last_ref_velocities, timer_started, times, ref_vels_theta1, ref_vels_theta2, ref_vels_d3, curr_vels_theta1, curr_vels_theta2, curr_vels_d3, start_time
+
+
+    #print(ref_vel)
 
     # Start timer for recording data
     if not timer_started:
@@ -91,6 +114,13 @@ def do_pd_control(ref_vel, curr_vel, joint_name):
 
         # PD output
         effort = position_err*Kp_vals[0] + derivative_err*Kd_vals[0]
+        # Append data entries to lists
+        ref_vels_theta1.append(ref_vel)
+        curr_vels_theta1.append(curr_vel)
+
+        # Append data entries to lists
+        times.append(time.time())
+
     elif (joint_name is 'theta2'):
 
         derivative_err = (last_velocities[1] - curr_vel)/sampling_rate
@@ -101,6 +131,10 @@ def do_pd_control(ref_vel, curr_vel, joint_name):
 
         # PD output
         effort = position_err*Kp_vals[1] + derivative_err*Kd_vals[1]
+        # Append data entries to lists
+        ref_vels_theta2.append(ref_vel)
+        curr_vels_theta2.append(curr_vel)
+
     elif (joint_name is 'd3'):
 
         derivative_err = (last_velocities[2] - curr_vel)/sampling_rate
@@ -111,21 +145,19 @@ def do_pd_control(ref_vel, curr_vel, joint_name):
 
         # PD output
         effort = position_err*Kp_vals[2] + derivative_err*Kd_vals[2]
+        # Append data entries to lists
+        ref_vels_d3.append(ref_vel)
+        curr_vels_d3.append(curr_vel)
 
-    # Append data entries to lists
-    times.append(time.time())
-    ref_vels.append(ref_vel)
-    curr_vels.append(curr_vel)
+
 
     # Write effort to joint
-
-    #if (joint_name is 'theta2'):
     write_effort(effort, sampling_rate, joint_name)
 
     # If 15 secs have passed, record the data to a CSV file and reset timer params
     if time.time() > (start_time + record_time_interval):
         rospy.loginfo("Recorded data")
-        record_data(times, ref_vels, curr_vels)
+        record_data(times, ref_vels_theta1, ref_vels_theta2, ref_vels_d3, curr_vels_theta1, curr_vels_theta2, curr_vels_d3)
         reset_timer()
 
 
