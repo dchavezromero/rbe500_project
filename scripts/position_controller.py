@@ -3,7 +3,7 @@ import rospy
 import csv
 import time
 from gazebo_msgs.srv import *
-from rbe500_project.msg import joint_velocities, joint_angles 
+from rbe500_project.msg import joint_angles 
 
 joint_names = 'theta1', 'theta2', 'd3'
 
@@ -26,8 +26,6 @@ timer_started = False
 times = []
 set_points = []
 curr_points = []
-
-joint_vels = joint_velocities()
 
 def reset_timer():
     global times, set_points, curr_points, timer_started
@@ -84,7 +82,6 @@ def do_pd_control(set_point, curr_point, joint_name):
     if (joint_name is 'theta1'):
 
         derivative_err = (last_positions[0] - curr_point)/sampling_rate
-        joint_vels.theta1_velocity = derivative_err #rad/sec
 
         # Set reference vals
         last_positions[0] = curr_point
@@ -95,7 +92,6 @@ def do_pd_control(set_point, curr_point, joint_name):
     elif (joint_name is 'theta2'):
 
         derivative_err = (last_positions[1] - curr_point)/sampling_rate
-        joint_vels.theta2_velocity = derivative_err
 
         # Set reference vals
         last_positions[1] = curr_point
@@ -106,7 +102,6 @@ def do_pd_control(set_point, curr_point, joint_name):
     elif (joint_name is 'd3'):
 
         derivative_err = (last_positions[2] - curr_point)/sampling_rate
-        joint_vels.d3_velocity = derivative_err
 
         # Set reference vals
         last_positions[2] = curr_point
@@ -142,8 +137,6 @@ def callback(msg):
 def main():
     rospy.init_node("position_controller")
 
-    # Publisher for joint velocities
-    pub_velocities = rospy.Publisher("/scara/joint_velocities", joint_velocities, queue_size=1)
     sub = rospy.Subscriber("/scara/set_points", joint_angles, callback)
     r = rospy.Rate(ros_rate)
 
@@ -151,10 +144,7 @@ def main():
         r.sleep()
         do_pd_control(last_set_points[0], get_position(joint_names[0]), joint_names[0]) # maintain theta1 position
         do_pd_control(last_set_points[1], get_position(joint_names[1]), joint_names[1]) # maintain theta2 position
-        do_pd_control(last_set_points[2], get_position(joint_names[2]), joint_names[2]) # maintain d3 position
-
-        pub_velocities.publish(joint_vels)
-        
+        do_pd_control(last_set_points[2], get_position(joint_names[2]), joint_names[2]) # maintain d3 position       
 
 if __name__ == "__main__":
     try:

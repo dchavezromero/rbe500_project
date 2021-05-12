@@ -7,9 +7,9 @@ from rbe500_project.msg import ee_velocities
 from rbe500_project.srv import EEToJointVels,EEToJointVelsRequest
 
 joint_names = 'theta1', 'theta2', 'd3'
-
-Kp_vals = [25, 70, 40]
-Kd_vals = [25, 10, 20]
+#20, 20
+Kp_vals = [20, 20, 20]
+Kd_vals = [0, 0, 0]
 
 # 10Hz frequency
 ros_rate = 10.0
@@ -39,7 +39,7 @@ def reset_timer():
 
 def record_data(time, ref_vel, curr_vel):
 
-    with open('position_controller_data.csv', 'wb') as csv_file:
+    with open('velocity_controller_data.csv', 'wb') as csv_file:
 
         writer = csv.writer(csv_file, delimiter=',')
 
@@ -119,8 +119,8 @@ def do_pd_control(ref_vel, curr_vel, joint_name):
 
     # Write effort to joint
 
-    if (joint_name is 'd3'):
-        write_effort(effort, sampling_rate, joint_name)
+    #if (joint_name is 'theta2'):
+    write_effort(effort, sampling_rate, joint_name)
 
     # If 15 secs have passed, record the data to a CSV file and reset timer params
     if time.time() > (start_time + record_time_interval):
@@ -153,6 +153,7 @@ def get_curr_joint_vels():
 
     last_positions[0] = theta1
     last_positions[1] = theta2
+    last_positions[2] = d3
     
     return theta1_vel, theta2_vel, d3_vel
 
@@ -179,9 +180,9 @@ def main():
         r.sleep()
         curr_joint_vels = get_curr_joint_vels()
 
-        do_pd_control(last_velocities[0], curr_joint_vels[0], joint_names[0]) # maintain theta1 vels
-        do_pd_control(last_velocities[1], curr_joint_vels[1], joint_names[1]) # maintain theta2 vels
-        do_pd_control(last_velocities[2], curr_joint_vels[2], joint_names[2]) # maintain d3 vels
+        do_pd_control(last_ref_velocities[0], curr_joint_vels[0], joint_names[0]) # maintain theta1 vels
+        do_pd_control(last_ref_velocities[1], curr_joint_vels[1], joint_names[1]) # maintain theta2 vels
+        do_pd_control(last_ref_velocities[2], curr_joint_vels[2], joint_names[2]) # maintain d3 vels
         
 
 if __name__ == "__main__":
