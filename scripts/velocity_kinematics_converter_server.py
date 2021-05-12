@@ -66,7 +66,7 @@ def get_jacob():
 
     Pe = T03.col(-1)
 
-    # Diffirentiate wtr each symbolic var
+    # Diffirentiate wrt each symbolic var
     upper_J_col_1 = sym.diff(Pe, theta1)
     upper_J_col_2 = sym.diff(Pe, theta2)
     upper_J_col_3 = sym.diff(Pe, d3)

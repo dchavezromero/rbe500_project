@@ -120,7 +120,7 @@ def do_pd_control(set_point, curr_point, joint_name):
     set_points.append(set_point)
     curr_points.append(curr_point)
 
-    # Write effort to d3 joint
+    # Write effort to joint
     write_effort(effort, sampling_rate, joint_name)
 
     # If 15 secs have passed, record the data to a CSV file and reset timer params

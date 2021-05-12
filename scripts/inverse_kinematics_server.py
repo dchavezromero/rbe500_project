@@ -54,7 +54,7 @@ def calc_inv_kin(req):
     result.d3 = d3
 
     # Move joints to calculated values
-    write_position()
+    #write_position()
     #pub_theta1.publish(result.theta1)
     #pub_theta2.publish(result.theta2)
     #pub_d3.publish(result.d3)

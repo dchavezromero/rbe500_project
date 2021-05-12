@@ -64,6 +64,7 @@ add_service_files(
    MoveJoint.srv
    EEToJointVels.srv
    JointToEEVels.srv
+   UpdateVelocities.srv
 )
 
 ## Generate actions in the 'action' folder
