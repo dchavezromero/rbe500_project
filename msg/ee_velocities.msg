@@ -1,0 +1,6 @@
+float64 x_velocity
+float64 y_velocity
+float64 z_velocity
+float64 roll_velocity
+float64 twist_velocity
+float64 yaw_velocity

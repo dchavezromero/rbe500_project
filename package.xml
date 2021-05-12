@@ -58,6 +58,8 @@
   <exec_depend>rospy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <depend>joint_angles</depend>
+  <depend>ee_velocities</depend>
+  <depend>joint_velocities</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

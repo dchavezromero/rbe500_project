@@ -54,6 +54,7 @@ add_message_files(
    FILES
    joint_angles.msg
    joint_velocities.msg
+   ee_velocities.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -61,6 +62,8 @@ add_service_files(
    FILES
    InvKin.srv
    MoveJoint.srv
+   EEToJointVels.srv
+   JointToEEVels.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -169,6 +172,7 @@ catkin_install_python(PROGRAMS
    scripts/position_controller_server.py
    scripts/inverse_kinematics_server.py
    scripts/inverse_kinematics_client.py
+   scripts/velocity_kinematics_converter_server.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
